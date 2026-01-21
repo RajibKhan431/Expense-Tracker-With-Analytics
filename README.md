@@ -17,8 +17,8 @@ The client and the server need to be running at the same time. Make sure you hav
 
 I have deleted my .env file from server folder.After creating  clone please add your own .env file in server folder and then run the project locally.
 these are the .env credentials :
-[JWT_SECRET =
-MONGO_URI=   ]
+[JWT_SECRET  &
+MONGO_URI   ]
 
 Starting off by cloning the project:
 ```bash
