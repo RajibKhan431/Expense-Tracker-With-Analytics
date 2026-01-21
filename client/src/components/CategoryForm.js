@@ -46,7 +46,7 @@ export default function CategoryForm({ editCategory, setEditCategory }) {
   const [form, setForm] = useState(InitialForm);
   const [editMode, setEditMode] = useState(false);
 
-  // ✅ HOOKS ALWAYS RUN
+  //  HOOKS ALWAYS RUN
   useEffect(() => {
     if (editCategory && editCategory._id) {
       setForm(editCategory);
@@ -126,7 +126,6 @@ export default function CategoryForm({ editCategory, setEditCategory }) {
     reload(res, _user);
   }
 
-  // ✅ SAFE RENDER GUARD (AFTER HOOKS)
   if (!user || !user.categories) {
     return null; // or loading spinner
   }
