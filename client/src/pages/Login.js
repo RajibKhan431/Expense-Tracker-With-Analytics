@@ -45,13 +45,10 @@ export default function Login() {
 
     const { token, user } = response;
 
-    // ✅ Save token
     Cookie.set("token", token);
 
-    // ✅ CRITICAL FIX: correct Redux payload shape
     dispatch(setUser({ user }));
 
-    // ✅ Navigate after Redux state is correct
     navigate("/");
   };
 

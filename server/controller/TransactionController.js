@@ -52,7 +52,7 @@ export const categorySummary = async (req, res) => {
   const result = await Transaction.aggregate([
     {
       $match: {
-        user_id: req.user._id, // ✅ all transactions of logged-in user
+        user_id: req.user._id, 
       },
     },
     {
@@ -64,7 +64,7 @@ export const categorySummary = async (req, res) => {
   ]);
 
   const data = result
-  // ✅ REMOVE transactions with null category_id
+  
   .filter((item) => item._id !== null)
   .map((item) => {
     const category = req.user.categories.find(

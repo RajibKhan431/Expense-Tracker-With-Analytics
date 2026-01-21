@@ -66,9 +66,9 @@ export default function TransactionForm({
     setForm(InitialForm);
     setEditMode(false);
     setEditTransaction({});
-    fetchTransactions();        // refresh list + monthly
+    fetchTransactions();        
     fetchCategorySummary();
-     // ✅ refresh category chart
+     // 
   }
 }
 
