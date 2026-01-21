@@ -21,7 +21,6 @@ export default function Category() {
   const dispatch = useDispatch();
   const [editCategory, setEditCategory] = useState({});
 
-  // ✅ ADD THIS GUARD (VERY IMPORTANT)
   if (!user || !user.categories) {
     return null; // or <CircularProgress />
   }
@@ -31,7 +30,7 @@ export default function Category() {
   }
 
   async function remove(id) {
-    if (!user || !user.categories) return; // ✅ SAFETY
+    if (!user || !user.categories) return; 
 
     const res = await fetch(`${process.env.REACT_APP_API_URL}/category/${id}`, {
       method: "DELETE",
