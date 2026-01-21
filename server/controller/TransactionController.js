@@ -47,3 +47,38 @@ export const update = async (req, res) => {
   await Transaction.updateOne({ _id: req.params.id }, { $set: req.body });
   res.json({ message: "Success" });
 };
+///////////////////////////////////
+export const categorySummary = async (req, res) => {
+  const result = await Transaction.aggregate([
+    {
+      $match: {
+        user_id: req.user._id, // ✅ all transactions of logged-in user
+      },
+    },
+    {
+      $group: {
+        _id: "$category_id",
+        total: { $sum: "$amount" },
+      },
+    },
+  ]);
+
+  const data = result
+  // ✅ REMOVE transactions with null category_id
+  .filter((item) => item._id !== null)
+  .map((item) => {
+    const category = req.user.categories.find(
+      (c) => c._id?.toString() === item._id?.toString()
+    );
+
+    return {
+      category_id: item._id,
+      label: category?.label || "Unknown",
+      icon: category?.icon || "❓",
+      total: item.total,
+    };
+  });
+
+
+  res.json({ data });
+};

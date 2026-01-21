@@ -15,17 +15,40 @@ const InitialForm = {
   icon: "",
 };
 
-const icons = ["🚗", "🛒", "🧾", "📈"];
+const icons = [
+  "🚗", // Transportation
+  "🛒", // Shopping
+  "🧾", // Bills
+  "📈", // Investment
+  "🍔", // Food
+  "☕", // Cafe
+  "🏠", // Rent / Home
+  "💡", // Electricity
+  "📱", // Mobile / Internet
+  "💊", // Medical
+  "🎓", // Education
+  "🎬", // Entertainment
+  "✈️", // Travel
+  "🚌", // Public transport
+  "👕", // Clothing
+  "🐶", // Pets
+  "🎁", // Gifts
+  "💳", // EMI / Credit card
+  "🏋️", // Gym
+  "🧠", // Personal / Misc
+];
 
 export default function CategoryForm({ editCategory, setEditCategory }) {
   const user = useSelector((state) => state.auth.user);
   const token = Cookies.get("token");
   const dispatch = useDispatch();
+
   const [form, setForm] = useState(InitialForm);
   const [editMode, setEditMode] = useState(false);
 
+  // ✅ HOOKS ALWAYS RUN
   useEffect(() => {
-    if (editCategory._id !== undefined) {
+    if (editCategory && editCategory._id) {
       setForm(editCategory);
       setEditMode(true);
     } else {
@@ -59,6 +82,8 @@ export default function CategoryForm({ editCategory, setEditCategory }) {
   }
 
   async function create() {
+    if (!user || !user.categories) return;
+
     const res = await fetch(`${process.env.REACT_APP_API_URL}/category`, {
       method: "POST",
       body: JSON.stringify(form),
@@ -67,14 +92,18 @@ export default function CategoryForm({ editCategory, setEditCategory }) {
         Authorization: `Bearer ${token}`,
       },
     });
+
     const _user = {
       ...user,
       categories: [...user.categories, { ...form }],
     };
+
     reload(res, _user);
   }
 
   async function update() {
+    if (!user || !user.categories) return;
+
     const res = await fetch(
       `${process.env.REACT_APP_API_URL}/category/${editCategory._id}`,
       {
@@ -86,20 +115,20 @@ export default function CategoryForm({ editCategory, setEditCategory }) {
         },
       }
     );
+
     const _user = {
       ...user,
       categories: user.categories.map((cat) =>
-        cat._id == editCategory._id ? form : cat
+        cat._id === editCategory._id ? form : cat
       ),
     };
+
     reload(res, _user);
   }
 
-  function getCategoryNameById() {
-    return (
-      user.categories.find((category) => category._id === form.category_id) ??
-      ""
-    );
+  // ✅ SAFE RENDER GUARD (AFTER HOOKS)
+  if (!user || !user.categories) {
+    return null; // or loading spinner
   }
 
   return (
@@ -108,38 +137,36 @@ export default function CategoryForm({ editCategory, setEditCategory }) {
         <Typography variant="h6" sx={{ marginBottom: 2 }}>
           Add New Category
         </Typography>
+
         <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex" }}>
           <TextField
             type="text"
             sx={{ marginRight: 5 }}
-            id="outlined-basic"
             label="Label"
             name="label"
-            variant="outlined"
             size="small"
             value={form.label}
             onChange={handleChange}
           />
+
           <Autocomplete
-            value={getCategoryNameById()}
-            onChange={(event, newValue) => {
-              setForm({ ...form, icon: newValue });
-            }}
-            id="icons"
+            value={form.icon}
+            onChange={(e, newValue) =>
+              setForm({ ...form, icon: newValue })
+            }
             options={icons}
             sx={{ width: 200, marginRight: 5 }}
             renderInput={(params) => (
               <TextField {...params} size="small" label="Icon" />
             )}
           />
+
           {editMode ? (
             <>
               <Button type="submit" color="success" variant="outlined">
                 Update
               </Button>
-              <Button variant="secondary" onClick={handleCancel}>
-                Cancel
-              </Button>
+              <Button onClick={handleCancel}>Cancel</Button>
             </>
           ) : (
             <Button type="submit" color="success" variant="contained">

@@ -17,26 +17,33 @@ import { useState } from "react";
 
 export default function Category() {
   const token = Cookies.get("token");
-
-  const user = useSelector((state) => state.auth.user)
+  const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   const [editCategory, setEditCategory] = useState({});
+
+  // ✅ ADD THIS GUARD (VERY IMPORTANT)
+  if (!user || !user.categories) {
+    return null; // or <CircularProgress />
+  }
 
   function setEdit(category) {
     setEditCategory(category);
   }
 
   async function remove(id) {
+    if (!user || !user.categories) return; // ✅ SAFETY
+
     const res = await fetch(`${process.env.REACT_APP_API_URL}/category/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
+
     if (res.ok) {
       const _user = {
         ...user,
-        categories: user.categories.filter((cat) => cat._id != id),
+        categories: user.categories.filter((cat) => cat._id !== id),
       };
       dispatch(setUser({ user: _user }));
     }
@@ -44,13 +51,16 @@ export default function Category() {
 
   return (
     <Container>
+      {/* ✅ Render form ONLY when user exists */}
       <CategoryForm
         editCategory={editCategory}
         setEditCategory={setEditCategory}
       />
+
       <Typography variant="h6" sx={{ marginTop: 10 }}>
         List of Categories
       </Typography>
+
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -60,29 +70,23 @@ export default function Category() {
               <TableCell align="center">Actions</TableCell>
             </TableRow>
           </TableHead>
+
           <TableBody>
             {user.categories.map((row) => (
-              <TableRow
-                key={row._id}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell align="center" component="th" scope="row">
-                  {row.label}
-                </TableCell>
+              <TableRow key={row._id}>
+                <TableCell align="center">{row.label}</TableCell>
                 <TableCell align="center">{row.icon}</TableCell>
-
                 <TableCell align="center">
                   <IconButton
                     color="warning"
-                    component="label"
                     onClick={() => setEdit(row)}
                     disabled={editCategory.label !== undefined}
                   >
                     <EditSharpIcon />
                   </IconButton>
+
                   <IconButton
                     color="error"
-                    component="label"
                     onClick={() => remove(row._id)}
                     disabled={editCategory.label !== undefined}
                   >
@@ -92,6 +96,7 @@ export default function Category() {
               </TableRow>
             ))}
           </TableBody>
+
         </Table>
       </TableContainer>
     </Container>

@@ -1,6 +1,12 @@
-# MERN Expense Tracker
+# MERN Expense Tracker with Analytics
 
-An expense tracking application created using MERN stack and Material-UI. User can register, login, and operate full CRUD methods to their own transaction list and customize their transaction category option. The data will be visualized into a column chart to provide a better view to user's monthly.
+An expense tracking application created using MERN stack and Material-UI. User can register, login, and operate full CRUD methods to their own transaction list and customize their transaction category option. The data will be visualized into a column chart to provide a better view to user's monthly and category based expenses in which category he/she  spends more.
+
+# Key Feature
+1. Expense  & Income logging
+2. Monthly charts of expenses
+3. Category-based analysis bar chart
+4. Export expense data in CSV,XLSX,PDF format. 
 
 
 
@@ -11,7 +17,7 @@ The client and the server need to be running at the same time. Make sure you hav
 Starting off by cloning the project:
 
 ```bash
-  git clone https://github.com/tduyphat/MERN-Expense-Tracker-VAMK-Thesis-2023
+  git clone https://github.com/RajibKhan431/Expense-Tracker-With-Analytics
 ```
 
 Go to the "server" directory:
@@ -48,4 +54,5 @@ Start the client:
 ```bash
   npm start
 ```
-
+# Author:Rajib Khan
+# email: rajibkhan.bib@gmail.com

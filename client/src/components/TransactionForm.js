@@ -21,9 +21,11 @@ const InitialForm = {
 
 export default function TransactionForm({
   fetchTransactions,
+  fetchCategorySummary,
   editTransaction,
   setEditTransaction,
 }) {
+
   const user = useSelector((state) => state.auth.user);
   const categories = user?.categories || [];
   const token = Cookies.get("token");
@@ -60,13 +62,16 @@ export default function TransactionForm({
   }
 
   function reload(res) {
-    if (res.ok) {
-      setForm(InitialForm);
-      setEditMode(false);
-      setEditTransaction({});
-      fetchTransactions();
-    }
+  if (res.ok) {
+    setForm(InitialForm);
+    setEditMode(false);
+    setEditTransaction({});
+    fetchTransactions();        // refresh list + monthly
+    fetchCategorySummary();
+     // ✅ refresh category chart
   }
+}
+
 
   async function create() {
     const res = await fetch(`${process.env.REACT_APP_API_URL}/transaction`, {

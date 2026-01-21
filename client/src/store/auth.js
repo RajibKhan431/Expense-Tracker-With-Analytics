@@ -4,7 +4,7 @@ export const authSlice = createSlice({
   name: "auth",
   initialState: {
     isAuthenticated: false,
-    user: {},
+    user: null, // ✅ FIX: must be null, NOT {}
   },
   reducers: {
     setUser: (state, actions) => {
@@ -12,8 +12,8 @@ export const authSlice = createSlice({
       state.isAuthenticated = true;
     },
     logOut: (state) => {
-      state.user = {};
-      state.isAuthenticated = false;  
+      state.user = null;      // ✅ reset to null
+      state.isAuthenticated = false;
     },
   },
 });

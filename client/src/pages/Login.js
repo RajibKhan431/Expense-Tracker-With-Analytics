@@ -21,11 +21,13 @@ export default function Login() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
     const data = new FormData(event.currentTarget);
     const form = {
       email: data.get("email"),
       password: data.get("password"),
     };
+
     const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/login`, {
       method: "POST",
       body: JSON.stringify(form),
@@ -34,16 +36,23 @@ export default function Login() {
       },
     });
 
-    const { token, user } = await res.json();
+    const response = await res.json();
 
-    if (res.ok) {
-      Cookie.set("token", token);
-      dispatch(setUser(user));
-      navigate("/");
-    } else {
+    if (!res.ok) {
       alert("Wrong email or password!");
       return;
     }
+
+    const { token, user } = response;
+
+    // ✅ Save token
+    Cookie.set("token", token);
+
+    // ✅ CRITICAL FIX: correct Redux payload shape
+    dispatch(setUser({ user }));
+
+    // ✅ Navigate after Redux state is correct
+    navigate("/");
   };
 
   const handleFieldChange = (event) => {
@@ -66,9 +75,11 @@ export default function Login() {
         <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
           <LockOutlinedIcon />
         </Avatar>
+
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
+
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
             margin="normal"
@@ -81,6 +92,7 @@ export default function Login() {
             autoFocus
             onChange={handleFieldChange}
           />
+
           <TextField
             margin="normal"
             required
@@ -92,6 +104,7 @@ export default function Login() {
             autoComplete="current-password"
             onChange={handleFieldChange}
           />
+
           <Button
             type="submit"
             fullWidth
@@ -101,6 +114,7 @@ export default function Login() {
           >
             Sign In
           </Button>
+
           <Grid container>
             <Grid item>
               <RouterLink to="/register">
