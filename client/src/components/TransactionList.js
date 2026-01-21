@@ -52,7 +52,7 @@ function exportToCSV() {
     return;
   }
 
-  // ✅ flatten grouped data
+  
   const flatTransactions = data.flatMap(
     (month) => month.transactions || []
   );
@@ -77,7 +77,7 @@ function exportToCSV() {
     ];
   });
 
-  // ✅ UTF-8 BOM added (\uFEFF)
+  
   const csvContent =
     "\uFEFF" +
     headers.map((h) => `"${h}"`).join(",") +
@@ -100,7 +100,7 @@ function exportToExcel() {
     return;
   }
 
-  // ✅ flatten monthly grouped transactions
+
   const flatTransactions = data.flatMap(
     (month) => month.transactions || []
   );
@@ -110,7 +110,7 @@ function exportToExcel() {
     return;
   }
 
-  // ✅ prepare rows for Excel
+
   const excelData = flatTransactions.map((row) => {
     const category = user?.categories.find(
       (cat) => cat._id === row.category_id
@@ -126,7 +126,7 @@ function exportToExcel() {
     };
   });
 
-  // ✅ create worksheet & workbook
+  
   const worksheet = XLSX.utils.json_to_sheet(excelData);
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(
@@ -135,7 +135,7 @@ function exportToExcel() {
     "Transactions"
   );
 
-  // ✅ auto column width
+  
   worksheet["!cols"] = [
     { wch: 10 },
     { wch: 25 },
